@@ -11,5 +11,5 @@ libraryDependencies ++= Seq(
   cache,
   javaWs,
   "org.postgresql" % "postgresql" % "9.4-1206-jdbc42",
-  evolutions
+  evolutions 
 )

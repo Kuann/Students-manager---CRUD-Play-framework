@@ -1,8 +1,15 @@
 package controllers;
 
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.Transaction;
 import play.mvc.*;
+import play.data.*;
+import static play.data.Form.*;
 
-import views.html.*;
+import models.*;
+
+import javax.inject.Inject;
+import javax.persistence.PersistenceException;
 
 /**
  * This controller contains an action to handle HTTP requests
@@ -17,7 +24,9 @@ public class HomeController extends Controller {
      * <code>GET</code> request with a path of <code>/</code>.
      */
     public Result index() {
-        return ok(index.render("Your new application is ready."));
+        //return ok(index.render("Your new application is ready."));
+        Course c = Course.find.byId(2L);
+        return ok(c.name);
     }
 
 }
