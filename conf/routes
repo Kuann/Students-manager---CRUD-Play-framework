@@ -4,6 +4,12 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
+GET		/course/:id					controllers.HomeController.getCourse(id: Long)			
+POST	/course/:id/delete			controllers.HomeController.deleteCourse(id: Long)
+POST	/course/:id/update			controllers.HomeController.updateCourse(id: Long)
+POST	/course						controllers.HomeController.newCourse()
+
+
 # An example controller showing how to use dependency injection
 GET     /count                      controllers.CountController.count
 # An example controller showing how to write asynchronous code
