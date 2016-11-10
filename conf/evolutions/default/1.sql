@@ -8,14 +8,20 @@ create table course (
   constraint pk_course primary key (id))
 ;
 
-create sequence course_seq start with 1000;
+create table student (
+  id                        bigint not null,
+  name                      varchar(255),
+  course_id                bigint,
+  constraint pk_student primary key (id))
+;
+
+alter table student add constraint fk_student_course foreign key (course_id) references course(id) on delete restrict on update restrict;
+create index ix_student_course on student(course_id);
+
 
 # --- !Downs
 
 SET REFERENTIAL_INTEGRITY FALSE;
 
 drop table if exists course;
-
-SET REFERENTIAL_INTEGRITY TRUE;
-
-drop sequence if exists course_seq;
+drop table if exists student;

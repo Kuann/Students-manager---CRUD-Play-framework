@@ -4,10 +4,19 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
+
+GET		/course						controllers.HomeController.getAllCourses()
 GET		/course/:id					controllers.HomeController.getCourse(id: Long)			
-POST	/course/:id/delete			controllers.HomeController.deleteCourse(id: Long)
-POST	/course/:id/update			controllers.HomeController.updateCourse(id: Long)
+POST	/course/delete				controllers.HomeController.deleteCourse()
+POST	/course/update				controllers.HomeController.updateCourse()
 POST	/course						controllers.HomeController.newCourse()
+
+
+GET		/student					controllers.HomeController.getAllStudents()
+GET		/student/:id				controllers.HomeController.getStudent(id: Long)			
+POST	/student/delete				controllers.HomeController.deleteStudent()
+POST	/student/update				controllers.HomeController.updateStudent()
+POST	/student					controllers.HomeController.newStudent()
 
 
 # An example controller showing how to use dependency injection

@@ -28,15 +28,25 @@ public class HomeController extends Controller {
      * <code>GET</code> request with a path of <code>/</code>.
      */
     public Result index() {
+    	return ok("Student Manager");
+    }
+    
+    public Result getAllCourses() {
     	List<Course> courses = Course.find.all();
     	JsonNode js = Json.toJson(courses);
+    	return ok(js.toString());
+    }
+    
+    public Result getAllStudents() {
+    	List<Student> students = Student.find.all();
+    	JsonNode js = Json.toJson(students);
     	return ok(js.toString());
     }
     
     public Result getCourse(Long id) {
     	Course course = Course.find.byId(id);
     	if (null == course)
-    		return ok("null");
+    		return forbidden("Can not get the course");
     	JsonNode js = Json.toJson(course);
     	return ok(js.toString());
     }
@@ -44,39 +54,119 @@ public class HomeController extends Controller {
     public Result newCourse() {
     	try {
         	Map<String, String[]> params = request().body().asFormUrlEncoded();
+        	String[] ids = params.get("id");
+        	String[] names = params.get("name"); 
+        	if (null == ids || null == names)
+        		throw new Exception("Id or name is empty!");
         	Course course = new Course();
-        	course.id = Long.parseLong(params.get("id")[0]);
-        	course.name = params.get("name")[0];
+        	course.id = Long.parseLong(ids[0]);
+        	course.name = names[0];
         	course.save();
         	return ok("Ok");
     	}
     	catch (Exception ex){
-    		return ok("Null");
+    		return forbidden(ex.getMessage());
     	}
     }
     
-    public Result updateCourse(Long id) {
+    public Result updateCourse() {
     	try {
-    		Course course = Course.find.ref(id);
     		Map<String, String[]> params = request().body().asFormUrlEncoded();
-        	course.name = params.get("name")[0];
+    		String[] ids = params.get("id");
+        	String[] names = params.get("name"); 
+        	if (null == ids || null == names)
+        		throw new Exception("Id or name is empty!");
+    		Course course = Course.find.ref(Long.parseLong(ids[0]));
+    		course.name = names[0];
         	course.update();
     		return ok("Ok");
     	}
     	catch (Exception ex){
-    		return ok(ex.getMessage());
+    		return forbidden(ex.getMessage());
     	}
     }
     
-    public Result deleteCourse(Long id) {
+    public Result deleteCourse() {
     	try {
-    		Course course = Course.find.ref(id);
+    		Map<String, String[]> params = request().body().asFormUrlEncoded();
+    		String[] ids = params.get("id");
+        	if (null == ids)
+        		throw new Exception("Id is empty!");
+    		Course course = Course.find.ref(Long.parseLong(ids[0]));
     		if (course.delete())
     			return ok("Ok");
-    		return ok("Null");
+    		return forbidden("Can not delete the course!");
     	}
     	catch (Exception ex){
-    		return ok(ex.getMessage());
+    		return forbidden(ex.getMessage());
+    	}
+    }
+    
+    public Result getStudent(Long id) {
+    	Student student = Student.find.byId(id);
+    	if (null == student)
+    		return forbidden("Can not get the student!");
+    	JsonNode js = Json.toJson(student);
+    	return ok(js.toString());
+    }
+    
+    public Result newStudent() {
+    	try {
+        	Map<String, String[]> params = request().body().asFormUrlEncoded();
+        	String[] ids = params.get("id");
+        	String[] names = params.get("name"); 
+        	String[] course_ids = params.get("course_id");
+        	if (null == ids || null == names)
+        		throw new Exception("Id or name is empty!");
+        	Student student = new Student();
+        	student.id = Long.parseLong(ids[0]);
+        	student.name = names[0];
+        	if (null != course_ids)
+        		student.course_id = Long.parseLong(course_ids[0]);
+        	else
+        		student.course_id = null;
+        	student.save();
+        	return ok("Ok");
+    	}
+    	catch (Exception ex){
+    		return forbidden(ex.getMessage());
+    	}
+    }
+    
+    public Result updateStudent() {
+    	try {
+    		Map<String, String[]> params = request().body().asFormUrlEncoded();
+    		String[] ids = params.get("id");
+        	String[] names = params.get("name"); 
+        	String[] course_ids = params.get("course_id");
+        	if (null == ids)
+        		throw new Exception("Id is empty!");
+        	Student student = Student.find.ref(Long.parseLong(ids[0]));
+        	if (null != names)
+	        	student.name = names[0];
+        	if (null != course_ids)
+        		student.course_id = Long.parseLong(course_ids[0]);
+        	student.update();
+        	return ok("Ok");
+    	}
+    	catch (Exception ex){
+    		return forbidden(ex.getMessage());
+    	}
+    }
+    
+    public Result deleteStudent() {
+    	try {
+    		Map<String, String[]> params = request().body().asFormUrlEncoded();
+    		String[] ids = params.get("id");
+    		if (null == ids)
+    			throw new Exception("Id is empty!");
+    		Student student = Student.find.ref(Long.parseLong(ids[0]));
+    		if (student.delete())
+    			return ok("Ok");
+    		return forbidden("Can not delete the student!");
+    	}
+    	catch (Exception ex){
+    		return forbidden(ex.getMessage());
     	}
     }
 }
